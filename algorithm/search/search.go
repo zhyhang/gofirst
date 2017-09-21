@@ -1,6 +1,8 @@
 package search
 
-import ()
+import (
+	"math"
+)
 
 //if found return index of e in a, or else return -1
 func BinarySearch(a []int, e int) int {
@@ -35,4 +37,36 @@ func bsearch(a []int, l, h, e int) int {
 	} else {
 		return bsearch(a, m+1, h, e)
 	}
+}
+
+type BiTreeNode struct {
+	left, right *BiTreeNode
+	value       int
+}
+
+// find the nearest node value in binary search tree
+func BinarySearchNearest(root *BiTreeNode, v int) *BiTreeNode {
+	if root == nil {
+		return nil
+	}
+	if root.value == v {
+		return root
+	}
+	if v < root.value {
+		node := BinarySearchNearest(root.left, v)
+		if node == nil || math.Abs((float64)(v-node.value)) > math.Abs((float64)(v-root.value)) {
+			return root
+		} else {
+			return node
+		}
+	}
+	if v > root.value {
+		node := BinarySearchNearest(root.right, v)
+		if node == nil || math.Abs((float64)(v-node.value)) > math.Abs((float64)(v-root.value)) {
+			return root
+		} else {
+			return node
+		}
+	}
+	return nil
 }
