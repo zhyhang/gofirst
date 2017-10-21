@@ -4,6 +4,7 @@ import (
 	"errors"
 )
 
+// big integer subtract with int arrays
 func BigIntSubtract(sum, subtractor []int) ([]int, int, error) {
 	if sum == nil || subtractor == nil {
 		return nil, 0, errors.New("sum or subtractor is nil")
