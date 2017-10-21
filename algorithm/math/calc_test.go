@@ -39,9 +39,10 @@ func TestBigIntSubtract(t *testing.T) {
 		if sign != c.sign {
 			t.Errorf("BigIntSubtract(%v,%v), want sign %v, but sign %v", c.a, c.b, c.sign, sign)
 		}
-		for i, r := range result {
-			if r != c.c[i] {
+		for i, c1 := range c.c {
+			if c1 != result[i] {
 				t.Errorf("BigIntSubtract(%v,%v), want %v, but %v", c.a, c.b, c.c, result)
+				break
 			}
 		}
 	}
