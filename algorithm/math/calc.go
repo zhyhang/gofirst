@@ -16,14 +16,19 @@ func BigIntSubtract(sum, subtractor []int) ([]int, int, error) {
 		sumCalc = subtractor
 		subtractorCalc = sum
 	}
-	result := make([]int, max(len(sum), len(subtractor)))
-	for i := len(sumCalc) - 1; i >= 0; i-- {
-		if sumCalc[i] >= subtractorCalc[i] {
-			result[i] = sumCalc[i] - subtractorCalc[i]
+	aux := make([]int, len(sumCalc))
+	copy(aux, sumCalc)
+	sumCalc = aux
+	result := make([]int, len(sumCalc))
+	for i1, i2 := len(sumCalc)-1, len(subtractorCalc)-1; i1 >= 0; i1, i2 = i1-1, i2-1 {
+		if i2 < 0 {
+			result[i1] = sumCalc[i1]
+		} else if sumCalc[i1] >= subtractorCalc[i2] {
+			result[i1] = sumCalc[i1] - subtractorCalc[i2]
 		} else {
 			// borrow from high digit
-			result[i] = 10 + sumCalc[i] - subtractorCalc[i]
-			for j := i - 1; j >= 0; j-- {
+			result[i1] = 10 + sumCalc[i1] - subtractorCalc[i2]
+			for j := i1 - 1; j >= 0; j-- {
 				if sumCalc[j] >= 1 {
 					sumCalc[j]--
 					break
@@ -67,12 +72,4 @@ func findBigger(a, b []int) int {
 		return 0
 	}
 
-}
-
-func max(a, b int) int {
-	if a >= b {
-		return a
-	} else {
-		return b
-	}
 }
