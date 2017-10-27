@@ -35,7 +35,7 @@ func TravelBinaryTree(root *BiTree) string {
 
 func travelBinaryTree(buf *bytes.Buffer, root *BiTree) {
 	if root != nil {
-		fmt.Fprint(buf, "%d,", root.value)
+		fmt.Fprintf(buf, "%d,", root.value)
 		travelBinaryTree(buf, root.left)
 		travelBinaryTree(buf, root.right)
 	}
