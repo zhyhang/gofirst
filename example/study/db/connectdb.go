@@ -17,14 +17,15 @@ func main() {
 		log.Fatal(err)
 	}
 	// insert
-	result, err := db.Exec("INSERT INTO godb (name) VALUES (?)", "北京你好")
+	result, err := db.Exec("INSERT INTO godb (name) VALUES (?)", "Hello 世界!")
 	if err != nil {
 		log.Println(err)
 	}
 	affectRow, _ := result.RowsAffected()
+	insertedId,_:=result.LastInsertId()
 	fmt.Printf("insert affectted rows: %d\n", affectRow)
 	// query
-	rows, err := db.Query("SELECT name FROM godb WHERE id = ?", 2)
+	rows, err := db.Query("SELECT name FROM godb WHERE id = ?", insertedId)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -33,7 +34,7 @@ func main() {
 		if err := rows.Scan(&name); err != nil {
 			log.Fatal(err)
 		}
-		fmt.Printf("%s is %d\n", name, 2)
+		fmt.Printf("%d is %s\n", insertedId, name)
 	}
 	if err := rows.Err(); err != nil {
 		log.Fatal(err)
