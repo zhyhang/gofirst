@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"bytes"
 	"strconv"
+	"sync"
 )
 
 func main() {
@@ -48,5 +49,11 @@ func main() {
 		fmt.Println(<-ch1)
 	}
 	fmt.Println()
+
+	// concurrent map since 1.9
+	cmap := new(sync.Map)
+	cmap.Store("k1", "v1")
+	cval, cstatus := cmap.Load("k1")
+	fmt.Printf("key:%s, value:%s, status:%v", "k1", cval, cstatus)
 
 }
