@@ -6,6 +6,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"time"
 	"fmt"
+	"sync"
 )
 
 func main() {
@@ -22,11 +23,18 @@ func main() {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	for i := 0; i < 20; i++ {
-		db.Query("SELECT name,age FROM godb WHERE id = ?", i)
-		//TODO bigger than max open conns will blocking
+	var wg sync.WaitGroup
+	for i := 0; i < 30; i++ {
+		wg.Add(1)
+		go func() {
+			db.Query("SELECT name,age FROM godb WHERE id = ?", i)
+			//must to trigger close for releasing connection
+			for records.Next() {
+			}
+			fmt.Printf("pool holding %d connections\n",  db.Stats().OpenConnections)
+			wg.Done()
+		}()
 	}
-	stats := db.Stats()
-	fmt.Printf("pool holding %d connections", stats.OpenConnections)
+	wg.Wait()
 
 }
