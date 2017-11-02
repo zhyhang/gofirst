@@ -27,7 +27,7 @@ func main() {
 	for i := 0; i < 30; i++ {
 		wg.Add(1)
 		go func() {
-			db.Query("SELECT name,age FROM godb WHERE id = ?", i)
+			records,_:=db.Query("SELECT name,age FROM godb WHERE id = ?", i)
 			//must to trigger close for releasing connection
 			for records.Next() {
 			}
