@@ -1,0 +1,20 @@
+
+1. download the instantclient-basic instantclient-sdk
+	http://download.oracle.com/otn/linux/instantclient/122010/instantclient-basic-linux.x64-12.2.0.1.0.zip
+	http://download.oracle.com/otn/linux/instantclient/122010/instantclient-sdk-linux.x64-12.2.0.1.0.zip
+2. unzip to path/instantclient
+
+3. softlink lib of ld
+	cd path/instantclient
+	ln libclntsh.so.12.1 libclntsh.so -s
+
+    3.1 set LD_LIBRARY_PATH in Ubuntu (also using for run go)
+	    sudo vi /etc/ld.so.conf.d/randomLibs.conf
+	    * add path/instantclient to the file *
+	    sudo ldconfig
+	* export LD_LIBRARY_PATH in .profile is not useful always *
+
+4. go get go-oci8 oracle driver
+	go get github.com/mattn/go-oci8
+
+
