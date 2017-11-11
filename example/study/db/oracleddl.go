@@ -16,7 +16,7 @@ const (
 		name VARCHAR2(128),birthday date)`
 
 	msgDsn = `Please specifiy connection parameter in GO_OCI8_CONNECT_STRING environment variable,
-or as the first argument! (The format is user/name@host:port/sid)`
+or as the first argument! (The format is user/pass@host:port/sid)`
 
 	defaultDsn = "sys/Ipinyou.com2017@127.0.0.1/orcltest?as=sysdba"
 )
