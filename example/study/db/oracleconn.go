@@ -5,10 +5,23 @@ import (
 	"os"
 	"database/sql"
 	"fmt"
+	"github.com/zhyhang/gofirst/example/study/db/dbconst"
 )
 
 func getDSN() string {
-	return "sys/Ipinyou.com2017@127.0.0.1/orcltest?as=sysdba"
+	var dsn string
+	if len(os.Args) > 1 {
+		dsn = os.Args[1]
+		if dsn != "" {
+			return dsn
+		}
+	}
+	dsn = os.Getenv("GO_OCI8_CONNECT_STRING")
+	if dsn != "" {
+		return dsn
+	}
+	fmt.Fprintln(os.Stderr, dbconst.MsgDsn)
+	return dbconst.DefaultDsn
 }
 
 func main() {

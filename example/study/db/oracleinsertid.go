@@ -5,19 +5,16 @@ import (
 	"os"
 	"database/sql"
 	"github.com/mattn/go-oci8"
+	"github.com/zhyhang/gofirst/example/study/db/dbconst"
 )
 
 const (
-	tableName2 = "zhyhang.example_insertid"
 
-	sqlCreatetable = "CREATE TABLE " + tableName2 + ` (id NUMBER(13,0)
+	tableNameInsertid = "zhyhang.example_insertid"
+
+	sqlTableInsertid = "CREATE TABLE " + tableNameInsertid + ` (id NUMBER(13,0)
 		GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1)
 		primary key, data varchar2(256))`
-
-	msgDsn1 = `Please specifiy connection parameter in GO_OCI8_CONNECT_STRING environment variable,
-or as the first argument! (The format is user/pass@host:port/sid)`
-
-	defaultDsn1 = "sys/Ipinyou.com2017@127.0.0.1/orcltest?as=sysdba"
 )
 
 func getDSN1() string {
@@ -32,25 +29,25 @@ func getDSN1() string {
 	if dsn != "" {
 		return dsn
 	}
-	fmt.Fprintln(os.Stderr, msgDsn1)
-	return defaultDsn1
+	fmt.Fprintln(os.Stderr, dbconst.MsgDsn)
+	return dbconst.DefaultDsn
 }
 
 func main() {
-	os.Setenv("NLS_LANG", "")
+	os.Setenv("NLS_LANG", "Simplified Chinese_china.AL32UTF8")
 	db, err := sql.Open("oci8", getDSN1())
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	defer db.Close()
-	db.Exec("drop table " + tableName2)
-	_, err = db.Exec(sqlCreatetable)
+	//db.Exec("drop table " + tableName2)
+	_, err = db.Exec(sqlTableInsertid)
 	if err != nil {
-		fmt.Println("create table " + tableName2 + " error:")
+		fmt.Println("create table " + tableNameInsertid + " error:")
 		fmt.Println(err)
 	}
-	res, err := db.Exec("insert into " + tableName2 + "(data) values ('世界你好')")
+	res, err := db.Exec("insert into " + tableNameInsertid + "(data) values ('世界你好，我很好！')")
 	if err != nil {
 		fmt.Println("insert row error:")
 		fmt.Println(err)
@@ -64,7 +61,7 @@ func main() {
 	}
 	rowID := oci8.GetLastInsertId(insertid)
 	var id int
-	err = db.QueryRow("select id from "+tableName2+" where rowid = :1", rowID).Scan(&id)
+	err = db.QueryRow("select id from "+tableNameInsertid+" where rowid = :1", rowID).Scan(&id)
 	if err != nil {
 		fmt.Println("oci8 last insert Id error:")
 		fmt.Println(err)

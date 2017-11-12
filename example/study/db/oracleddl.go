@@ -6,22 +6,19 @@ import (
 	"database/sql"
 	_ "github.com/mattn/go-oci8"
 	"time"
+	"github.com/zhyhang/gofirst/example/study/db/dbconst"
 )
 
 const (
-	tableName1 = "zhyhang.tmp_godb1"
 
-	createAutoincr = "CREATE TABLE " + tableName1 + ` (id NUMBER(13,0)
+	tableNameTmp = "zhyhang.tmp_godb1"
+
+	createAutoincr = "CREATE TABLE " + tableNameTmp + ` (id NUMBER(13,0)
 		GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
 		name VARCHAR2(128),birthday date)`
-
-	msgDsn = `Please specifiy connection parameter in GO_OCI8_CONNECT_STRING environment variable,
-or as the first argument! (The format is user/pass@host:port/sid)`
-
-	defaultDsn = "sys/Ipinyou.com2017@127.0.0.1/orcltest?as=sysdba"
 )
 
-func getDSN2() string {
+func getDsnDdl() string {
 	var dsn string
 	if len(os.Args) > 1 {
 		dsn = os.Args[1]
@@ -33,30 +30,30 @@ func getDSN2() string {
 	if dsn != "" {
 		return dsn
 	}
-	fmt.Fprintln(os.Stderr, msgDsn)
-	return defaultDsn
+	fmt.Fprintln(os.Stderr, dbconst.MsgDsn)
+	return dbconst.DefaultDsn
 }
 
 func main() {
-	os.Setenv("NLS_LANG", "")
-	db, err := sql.Open("oci8", getDSN2())
+	os.Setenv("NLS_LANG", "Simplified Chinese_china.AL32UTF8")
+	db, err := sql.Open("oci8", getDsnDdl())
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	defer db.Close()
-	_, err = db.Exec("drop table " + tableName1)
+	_, err = db.Exec("drop table " + tableNameTmp)
 	if err != nil {
-		fmt.Println("drop table " + tableName1 + " error:")
+		fmt.Println("drop table " + tableNameTmp + " error:")
 		fmt.Println(err)
 	}
 	_, err = db.Exec(createAutoincr)
 	if err != nil {
-		fmt.Println("create table " + tableName1 + " error:")
+		fmt.Println("create table " + tableNameTmp + " error:")
 		fmt.Println(err)
 	}
-	db.Exec("insert into " + tableName1 + "(name,birthday) values ('z',sysdate)")
-	row := db.QueryRow("select name,id,birthday from " + tableName1)
+	db.Exec("insert into " + tableNameTmp + "(name,birthday) values ('z',sysdate)")
+	row := db.QueryRow("select name,id,birthday from " + tableNameTmp)
 	var name string
 	var id int
 	var birthday time.Time
