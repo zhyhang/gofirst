@@ -216,13 +216,16 @@ func main() {
 
 	prtln()
 	prtln("data time parse from millis timestamp:")
-	ts := int64(-61352293025666) //0025-10-28 08:28:38.666
+	tt, _ := time.ParseInLocation("2006-01-02 15:04:05", "0025-10-28 08:28:38.666", time.Local)
+	ts := toTimestampMillis1(tt)
 	prtln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
 	ts = int64(1510914518888) //2017-11-17 18:28:38.888
 	prtln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
 	ts = int64(1511164435560)
 	prtln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
 	ts = int64(28973722708666) //2888-02-21 08:18:28.666
+	prtln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
+	ts = 0
 	prtln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
 
 }
