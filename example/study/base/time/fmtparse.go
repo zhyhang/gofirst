@@ -172,60 +172,60 @@ func toTimestampMillis2(t time.Time) int64 {
 
 func main() {
 
-	prtln := fmt.Println
+	pln := fmt.Println
 
-	prtln("time now:")
+	pln("time now:")
 	tnow := timenow()
-	prtln("\t" + tnow.String())
+	pln("\t" + tnow.String())
 
-	prtln()
-	prtln("date time format:")
+	pln()
+	pln("date time format:")
 	for i, v := range format() {
 		if len(v) > 0 {
-			prtln("\t" + strconv.Itoa(i+1) + "." + v[0] + "\t" + v[1])
+			pln("\t" + strconv.Itoa(i+1) + "." + v[0] + "\t" + v[1])
 		}
 	}
 
-	prtln()
-	prtln("date time parse:")
+	pln()
+	pln("date time parse:")
 	for i, v := range parse() {
 		if len(v) > 0 {
-			prtln("\t" + strconv.Itoa(i) + "." + v[0] + " ---> " + v[1])
+			pln("\t" + strconv.Itoa(i) + "." + v[0] + " ---> " + v[1])
 		}
 	}
 
-	prtln()
-	prtln("currrent time millis:")
-	prtln("\tmethod1: " + strconv.FormatInt(toTimestampMillis1(tnow), 10))
-	prtln("\tmehtod2: " + strconv.FormatInt(toTimestampMillis2(tnow), 10))
+	pln()
+	pln("currrent time millis:")
+	pln("\tmethod1: " + strconv.FormatInt(toTimestampMillis1(tnow), 10))
+	pln("\tmehtod2: " + strconv.FormatInt(toTimestampMillis2(tnow), 10))
 
-	prtln()
-	prtln("date time millis:")
+	pln()
+	pln("date time millis:")
 	longt, _ := time.ParseInLocation("2006-01-02 15:04:05", "2017-11-17 18:28:38.888", time.Local)
-	prtln("\ttime is " + longt.String())
-	prtln("\t\tmethod1: " + strconv.FormatInt(toTimestampMillis1(longt), 10))
-	prtln("\t\tmehtod2: " + strconv.FormatInt(toTimestampMillis2(longt), 10))
+	pln("\ttime is " + longt.String())
+	pln("\t\tmethod1: " + strconv.FormatInt(toTimestampMillis1(longt), 10))
+	pln("\t\tmehtod2: " + strconv.FormatInt(toTimestampMillis2(longt), 10))
 	longt, _ = time.ParseInLocation("2006-01-02 15:04:05", "0025-10-28 08:28:38.666", time.Local)
-	prtln("\ttime is " + longt.String())
-	prtln("\t\tmethod1: " + strconv.FormatInt(toTimestampMillis1(longt), 10))
-	prtln("\t\tmehtod2: " + strconv.FormatInt(toTimestampMillis2(longt), 10))
+	pln("\ttime is " + longt.String())
+	pln("\t\tmethod1: " + strconv.FormatInt(toTimestampMillis1(longt), 10))
+	pln("\t\tmehtod2: " + strconv.FormatInt(toTimestampMillis2(longt), 10))
 	longt, _ = time.ParseInLocation("2006-01-02 15:04:05", "2888-02-21 08:18:28.666", time.Local)
-	prtln("\ttime is " + longt.String())
-	prtln("\t\tmethod1: " + strconv.FormatInt(toTimestampMillis1(longt), 10))
-	prtln("\t\tmehtod2: " + strconv.FormatInt(toTimestampMillis2(longt), 10))
+	pln("\ttime is " + longt.String())
+	pln("\t\tmethod1: " + strconv.FormatInt(toTimestampMillis1(longt), 10))
+	pln("\t\tmehtod2: " + strconv.FormatInt(toTimestampMillis2(longt), 10))
 
-	prtln()
-	prtln("data time parse from millis timestamp:")
+	pln()
+	pln("data time parse from millis timestamp:")
 	tt, _ := time.ParseInLocation("2006-01-02 15:04:05", "0025-10-28 08:28:38.666", time.Local)
 	ts := toTimestampMillis1(tt)
-	prtln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
+	pln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
 	ts = int64(1510914518888) //2017-11-17 18:28:38.888
-	prtln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
+	pln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
 	ts = int64(1511164435560)
-	prtln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
+	pln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
 	ts = int64(28973722708666) //2888-02-21 08:18:28.666
-	prtln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
+	pln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
 	ts = 0
-	prtln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
+	pln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
 
 }
