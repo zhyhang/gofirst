@@ -143,26 +143,18 @@ func parse() [][]string {
 
 // local time from timestamp (millis)
 func parseLocaltimeOfTimestamp(millis int64) time.Time {
-	nsec := millis % 1000
-	if nsec < 0 {
+	sec := millis / 1000;
+	nsec := millis % 1000 * 1000000
+	if sec < 0 {
+		sec--
 		nsec = -nsec
 	}
-	return time.Unix(millis/1000, 1000000*nsec)
+	return time.Unix(sec, nsec)
 }
 
 // recommend using this method to get milliseconds
 func toTimestampMillis1(t time.Time) int64 {
-	sec := t.Unix()
-	millis := int64(t.Nanosecond()) / int64(time.Millisecond)
-	if sec > 0 {
-		return sec*1000 + millis
-	} else if sec < 0 {
-		return sec*1000 - millis
-	} else if t.UnixNano() >= 0 {
-		return millis
-	} else {
-		return -millis
-	}
+	return t.Unix()*1000 + int64(t.Nanosecond())/int64(time.Millisecond)
 }
 
 // this retrieve millis, possible exceeding int64, see time.UnixNano
@@ -213,6 +205,14 @@ func main() {
 	pln("\ttime is " + longt.String())
 	pln("\t\tmethod1: " + strconv.FormatInt(toTimestampMillis1(longt), 10))
 	pln("\t\tmehtod2: " + strconv.FormatInt(toTimestampMillis2(longt), 10))
+	longt, _ = time.ParseInLocation("2006-01-02 15:04:05", "1970-01-01 08:00:00.100", time.Local)
+	pln("\ttime is " + longt.String())
+	pln("\t\tmethod1: " + strconv.FormatInt(toTimestampMillis1(longt), 10))
+	pln("\t\tmehtod2: " + strconv.FormatInt(toTimestampMillis2(longt), 10))
+	longt, _ = time.ParseInLocation("2006-01-02 15:04:05", "1970-01-01 07:59:59.900", time.Local)
+	pln("\ttime is " + longt.String())
+	pln("\t\tmethod1: " + strconv.FormatInt(toTimestampMillis1(longt), 10))
+	pln("\t\tmehtod2: " + strconv.FormatInt(toTimestampMillis2(longt), 10))
 
 	pln()
 	pln("data time parse from millis timestamp:")
@@ -226,6 +226,10 @@ func main() {
 	ts = int64(28973722708666) //2888-02-21 08:18:28.666
 	pln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
 	ts = 0
+	pln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
+	ts = 100
+	pln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
+	ts = -100
 	pln("\ttimestamp millis: " + strconv.FormatInt(ts, 10) + "; to time: " + parseLocaltimeOfTimestamp(ts).String())
 
 }
