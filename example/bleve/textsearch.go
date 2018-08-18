@@ -5,6 +5,8 @@ import (
 	"github.com/blevesearch/bleve"
 )
 
+const storepath = "/tmp/bleve.example"
+
 func main() {
 	message := struct {
 		Id   string
@@ -18,9 +20,9 @@ func main() {
 
 	// open a new index
 	mapping := bleve.NewIndexMapping()
-	index, err := bleve.New("example.bleve.1", mapping)
+	index, err := bleve.New(storepath, mapping)
 	if err != nil {
-		index, err = bleve.Open("example.bleve.1")
+		index, err = bleve.Open(storepath)
 		if err != nil {
 			panic(err)
 		}
