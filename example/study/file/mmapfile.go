@@ -15,11 +15,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer file.Close()
 	// write data to file and flush, lead to mmap byte[] is available read
 	writer := bufio.NewWriter(file)
 	writer.WriteByte(1)
 	writer.WriteByte(2)
 	writer.Flush()
+
 	maxFileSize := 1024 * os.Getpagesize()
 	// open a mmap file
 	fileData, err1 := syscall.Mmap(int(file.Fd()), 0, maxFileSize, syscall.PROT_READ, syscall.MAP_SHARED) //syscall.MAP_SHARED)
@@ -28,6 +30,6 @@ func main() {
 	}
 	fmt.Println("open mmap file " + filePath + " OK, len: " + strconv.Itoa(len(fileData)) +
 		", first byte: " + strconv.Itoa(int(fileData[0])))
-	syscall.Munmap(fileData)
+	defer syscall.Munmap(fileData)
 
 }
