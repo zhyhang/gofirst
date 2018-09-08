@@ -12,6 +12,10 @@ import (
 
 // console command like bash tail
 func main() {
+	s := "hello 世界！"
+	for _, ch := range s {
+		fmt.Printf("%c,%q", ch, ch)
+	}
 	follow(os.Args[1])
 }
 
