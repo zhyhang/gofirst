@@ -90,16 +90,17 @@ func PostPooled() {
 		Transport: trs,
 	}
 	req := map[string][]string{}
-	req["20180915"] = []string{"id1"}
+	req["20180915"] = []string{"L032vV1Rc5bG0H6lzF9o", "L032vV1Rc5bG0H6l_T70"}
 	reqBytes, err := json.Marshal(req)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%v\n", req)
+	log.Printf("request:\n%s\n", string(reqBytes))
 	resp, err := client.Post("http://192.168.157.36:7600/query/bid", "application/json", bytes.NewBuffer(reqBytes))
 	if err != nil {
 		panic(err)
 	}
 	defer resp.Body.Close()
-	ioutil.ReadAll(resp.Body)
+	respBytes, _ := ioutil.ReadAll(resp.Body)
+	log.Printf("response:\n%s\n", string(respBytes))
 }

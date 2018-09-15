@@ -16,3 +16,7 @@ func TestGetRunPooled(t *testing.T) {
 func TestRunGetNoZip(t *testing.T) {
 	client.RunGetNoZip()
 }
+
+func TestPostPooled(t *testing.T) {
+	client.PostPooled()
+}
