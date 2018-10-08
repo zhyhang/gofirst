@@ -5,7 +5,6 @@ import (
 	"crypto/md5"
 	"encoding/binary"
 	"fmt"
-	redigo "github.com/gomodule/redigo/redis"
 	"github.com/zhyhang/gofirst/tools/redis"
 	"log"
 	"math/rand"
@@ -20,8 +19,10 @@ func main() {
 	parallel := 100
 	today := time.Now().Format("20060102")
 	rand.Seed(time.Now().Unix())
-	pool6400 := redis.NewPool(":6400", 100)
-	pool6401 := redis.NewPool(":6401", 100)
+	//pool6400 := redis.NewRedigoPool(":6400", 100)
+	//pool6401 := redis.NewRedigoPool(":6401", 100)
+	pool6400 := redis.NewCommonPool(":6400", 100)
+	pool6401 := redis.NewCommonPool(":6401", 100)
 	defer pool6400.Close()
 	defer pool6401.Close()
 	log.Println("begin write to redis")
@@ -40,7 +41,7 @@ func main() {
 			i++
 		}
 		batchWg.Wait()
-		//log.Printf("connect to redis times: %d",redis.ConnectCounter)
+		log.Printf("connect to redis times: %d", redis.ConnectCounter)
 	}
 	log.Println("end write to redis")
 }
@@ -55,22 +56,31 @@ func uuid() string {
 	return buf.String()
 }
 
-func incr(wg *sync.WaitGroup, pool *redigo.Pool, key string) {
-	conn := pool.Get()
+func incr(wg *sync.WaitGroup, pool redis.ConnPool, key string) {
+	defer wg.Done()
+	conn := pool.Borrow()
+	if conn != nil {
+		defer pool.Return(conn)
+	} else {
+		return
+	}
 	_, err := conn.Do("incr", key)
 	if err != nil {
 		log.Printf("incr error %v", err)
 	}
-	conn.Close()
-	defer wg.Done()
 }
 
-func zincr(wg *sync.WaitGroup, pool *redigo.Pool, uid string, field string, delta float64) {
-	conn := pool.Get()
+func zincr(wg *sync.WaitGroup, pool redis.ConnPool, uid string, field string, delta float64) {
+	defer wg.Done()
+	conn := pool.Borrow()
+	if conn != nil {
+		defer pool.Return(conn)
+	} else {
+		return
+	}
 	_, err := conn.Do("zincrby", uid, strconv.FormatFloat(delta, 'f', 2, 64), field)
 	if err != nil {
-		log.Printf("incr error %v", err)
+		log.Printf("zincr error %v", err)
 	}
-	conn.Close()
-	defer wg.Done()
+
 }
