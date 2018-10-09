@@ -48,7 +48,10 @@ func (p *CommonPool) Borrow() (c redis.Conn) {
 }
 
 func (p *CommonPool) Return(c redis.Conn) {
-	p.realPool.ReturnObject(context.Background(), c)
+	err := p.realPool.ReturnObject(context.Background(), c)
+	if err != nil {
+		log.Printf("return to common pool error %v\n", err)
+	}
 }
 
 func (p *CommonPool) Close() {
@@ -57,6 +60,7 @@ func (p *CommonPool) Close() {
 
 func NewRedigoPool(addr string, maxActive int) *RedigoPool {
 	p := &redis.Pool{
+		// should equals MaxActive, or else two connection create then destroy, and so on
 		MaxIdle:     maxActive,
 		IdleTimeout: 240 * time.Second,
 		MaxActive:   maxActive,
@@ -86,6 +90,7 @@ func NewCommonPool(addr string, maxActive int) *CommonPool {
 	ctx := context.Background()
 	p := pool.NewObjectPoolWithDefaultConfig(ctx, factory)
 	p.Config.MaxTotal = maxActive
-	p.Config.MaxIdle = 10
+	// should be -1 or equals Maxtotal
+	p.Config.MaxIdle = -1
 	return &CommonPool{p}
 }

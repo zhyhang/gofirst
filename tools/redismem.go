@@ -8,12 +8,24 @@ import (
 	"github.com/zhyhang/gofirst/tools/redis"
 	"log"
 	"math/rand"
+	"net/http"
+	_ "net/http/pprof"
+	"os"
+	"os/signal"
+	"runtime"
 	"strconv"
 	"sync"
+	"syscall"
 	"time"
 )
 
 func main() {
+	// for kill -10 pid dump stack info
+	setupSigusr1Trap()
+	// dump stack info by http://localhost:6060/debug/pprof/goroutine?debug=2
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
 	total := 1000000
 	idCount := 10
 	parallel := 100
@@ -26,9 +38,9 @@ func main() {
 	defer pool6400.Close()
 	defer pool6401.Close()
 	log.Println("begin write to redis")
-	batchWg := &sync.WaitGroup{}
 	for i := 0; i < total; {
-		for j := 0; j < parallel && i < total; j++ {
+		batchWg := &sync.WaitGroup{}
+		for j := 0; j < parallel/idCount && i < total; j++ {
 			uuid := uuid()
 			for k := 0; k < idCount; k++ {
 				idInt := rand.Intn(1000000)
@@ -41,7 +53,9 @@ func main() {
 			i++
 		}
 		batchWg.Wait()
-		log.Printf("connect to redis times: %d", redis.ConnectCounter)
+		if redis.ConnectCounter > 240 {
+			log.Printf("connect to redis times: %d", redis.ConnectCounter)
+		}
 	}
 	log.Println("end write to redis")
 }
@@ -83,4 +97,21 @@ func zincr(wg *sync.WaitGroup, pool redis.ConnPool, uid string, field string, de
 		log.Printf("zincr error %v", err)
 	}
 
+}
+
+//for debug
+func setupSigusr1Trap() {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, syscall.SIGUSR1)
+	go func() {
+		for range c {
+			DumpStacks()
+		}
+	}()
+}
+
+func DumpStacks() {
+	buf := make([]byte, 16384)
+	buf = buf[:runtime.Stack(buf, true)]
+	fmt.Printf("=== BEGIN goroutine stack dump ===\n%s\n=== END goroutine stack dump ===", buf)
 }
