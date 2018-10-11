@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"crypto/md5"
 	"encoding/binary"
 	"fmt"
@@ -64,10 +63,7 @@ func uuid() string {
 	randInt := rand.Int63()
 	intBytes := make([]byte, 8)
 	binary.BigEndian.PutUint64(intBytes, uint64(randInt))
-	md5Bytes := md5.Sum(intBytes)
-	buf := new(bytes.Buffer)
-	fmt.Fprintf(buf, "%x", md5Bytes)
-	return buf.String()
+	return fmt.Sprintf("%x", md5.Sum(intBytes))
 }
 
 func incr(wg *sync.WaitGroup, pool redis.ConnPool, key string) {
