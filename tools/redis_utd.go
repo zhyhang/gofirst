@@ -16,14 +16,11 @@ import (
 )
 
 func main() {
-	// dump stack info by http://localhost:6060/debug/pprof/goroutine?debug=2
-	go func() {
-		log.Println(http.ListenAndServe("localhost:6060", nil))
-	}()
 
-	if len(os.Args) < 5 {
-		log.Printf("using: redis_utd <total request> <fields per key> <parallism> <redis addr>")
+	if len(os.Args) < 6 {
+		log.Printf("using: redis_utd <total request> <fields per key> <parallism> <redis addr> <debug listening addr>")
 		log.Printf("\tredis addr: host:port")
+		log.Printf("\tdebug listening addr: host:port(local host ip and port)")
 		os.Exit(-1)
 	}
 	total, err := strconv.Atoi(os.Args[1])
@@ -46,6 +43,10 @@ func main() {
 	//parallel := 100
 	//redisAddr :="192.168.144.50:10300"
 
+	// dump stack info by http://localhost:6060/debug/pprof/goroutine?debug=2
+	go func() {
+		log.Println(http.ListenAndServe(os.Args[5], nil))
+	}()
 	today := time.Now().Format("20060102")
 	rand.Seed(time.Now().Unix())
 	//ssds10300 := redis.NewRedigoPool(":6401", 100)
@@ -55,7 +56,7 @@ func main() {
 	for i := 0; i < total; {
 		batchWg := &sync.WaitGroup{}
 		for j := 0; j < parallel/idCount && i < total; j++ {
-			uuid := uuidUtd()
+			uuid := uuidUtd(i)
 			for k := 0; k < idCount; k++ {
 				idInt := rand.Intn(1000000)
 				id := strconv.Itoa(idInt)
@@ -70,10 +71,10 @@ func main() {
 	log.Println("end write to redis")
 }
 
-func uuidUtd() string {
-	randInt := rand.Int63()
+func uuidUtd(n int) string {
+	//randInt := rand.Int63()
 	intBytes := make([]byte, 8)
-	binary.BigEndian.PutUint64(intBytes, uint64(randInt))
+	binary.BigEndian.PutUint64(intBytes, uint64(n))
 	return fmt.Sprintf("%x", md5.Sum(intBytes))
 }
 
