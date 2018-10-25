@@ -47,7 +47,7 @@ func main() {
 				field := ":" + today + ":" + id
 				batchWg.Add(2)
 				go incr(batchWg, pool6400, uuid+field)
-				go zincr(batchWg, pool6401, uuid, field, 1.0)
+				go hincr(batchWg, pool6401, uuid, field, 1)
 			}
 			i++
 		}
@@ -80,7 +80,7 @@ func incr(wg *sync.WaitGroup, pool redis.ConnPool, key string) {
 	}
 }
 
-func zincr(wg *sync.WaitGroup, pool redis.ConnPool, uid string, field string, delta float64) {
+func hincr(wg *sync.WaitGroup, pool redis.ConnPool, uid string, field string, delta int) {
 	defer wg.Done()
 	conn := pool.Borrow()
 	if conn != nil {
@@ -88,9 +88,9 @@ func zincr(wg *sync.WaitGroup, pool redis.ConnPool, uid string, field string, de
 	} else {
 		return
 	}
-	_, err := conn.Do("zincrby", uid, strconv.FormatFloat(delta, 'f', 2, 64), field)
+	_, err := conn.Do("hincrby", uid, field, strconv.Itoa(delta))
 	if err != nil {
-		log.Printf("zincr error %v", err)
+		log.Printf("hincr error %v", err)
 	}
 
 }
