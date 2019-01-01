@@ -3,6 +3,7 @@ package list
 import (
 	"bytes"
 	"fmt"
+	dss "github.com/emirpasic/gods/stacks/arraystack"
 )
 
 type slist struct {
@@ -54,6 +55,34 @@ func reverseNestInner(head, prev *slist) *slist {
 		return head
 	}
 	return reverseNestInner(next, head)
+}
+
+func ReverseInStack(list *slist) *slist {
+	if list == nil || list.next == nil {
+		return list
+	}
+	stack := dss.New()
+	// push to stack
+	for node := list; node != nil; node = node.next {
+		stack.Push(node)
+	}
+	head, _ := stack.Pop()
+	prev := head.(*slist)
+	// pop from stack
+	for prev != nil {
+		n, _ := stack.Pop()
+		node, ok := n.(*slist)
+		if ok {
+			prev.next = node
+			prev = node
+		} else {
+			prev.next = nil
+			prev = nil
+		}
+	}
+
+	return head.(*slist)
+
 }
 
 func Print(list *slist) string {

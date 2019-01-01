@@ -23,6 +23,10 @@ func TestReverseNest(t *testing.T) {
 	runReverse(t, ReverseNest)
 }
 
+func TestReverseInStack(t *testing.T) {
+	runReverse(t, ReverseInStack)
+}
+
 func runReverse(t *testing.T, f func(*slist) *slist) {
 	head := &slist{1, nil}
 	for i, tail := 2, head; i <= 10; i, tail = i+1, tail.next {
