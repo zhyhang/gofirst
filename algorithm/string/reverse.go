@@ -28,6 +28,22 @@ func ReverseNest(s string) string {
 	return sub + string(r[0:1])
 }
 
+// reverse recursively (another manner)
+func ReverseNest1(s string) string {
+	r := []rune(s)
+	switchHeadTail(r)
+	return string(r)
+}
+
+func switchHeadTail(r []rune) {
+	if len(r) <= 1 {
+		return
+	}
+	bottom, top := 0, len(r)-1
+	r[bottom], r[top] = r[top], r[bottom]
+	switchHeadTail(r[bottom+1 : top])
+}
+
 // Reverse using stack
 func ReverseInStack(s string) string {
 	r := []rune(s)

@@ -14,6 +14,10 @@ func TestReverseInStack(t *testing.T) {
 	runReverse(t, ReverseInStack)
 }
 
+func TestReverseNest1(t *testing.T) {
+	runReverse(t, ReverseNest1)
+}
+
 func runReverse(t *testing.T, workingMethod func(string) string) {
 	cases := []struct {
 		in, want string
