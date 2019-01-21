@@ -1,9 +1,9 @@
 package main
 
-import "C"
 import (
 	"crypto/md5"
 	"github.com/tecbot/gorocksdb"
+	"io/ioutil"
 	"log"
 	"strconv"
 )
@@ -37,14 +37,15 @@ func main() {
 
 	options := gorocksdb.NewDefaultOptions()
 	options.SetCreateIfMissing(true)
-	db, err := gorocksdb.OpenDb(options, "/tmp/gorocks-test")
+	tempDir, _ := ioutil.TempDir("", "gorocksdb-test")
+	db, err := gorocksdb.OpenDb(options, tempDir)
 	if err != nil {
 		panic(err)
 	}
 	log.Println("begin write rocksdb")
 	parallel := 1
 	que := make(chan int, parallel)
-	for i := 0; i < 10000000; i++ {
+	for i := 0; i < 10000; i++ {
 		que <- 1
 		go put(db, que, i)
 	}
