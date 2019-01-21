@@ -8,6 +8,31 @@ import (
 	"strconv"
 )
 
+/**
+####################################################################
+# pre-require:                                                     #
+#                                                                  #
+# refer https://github.com/facebook/rocksdb/blob/master/INSTALL.md #
+#     1. install zip libs by the instructs writing up url          #
+#     2. cd /home/zhyhang/code/                                    #
+#     3. git clone https://github.com/facebook/rocksdb.git         #
+#     4. cd rocksdb                                                #
+#     5. make static_lib(if librocksdb.a not exists)               #
+#     6. run this sh                                               #
+####################################################################
+*/
+
+// run in GoLand:
+//     run-edit configuration...
+//     click Environment, add following:
+//     CGO_CFLAGS="-I/home/zhyhang/code/rocksdb/include"
+//     CGO_LDFLAGS="-L/home/zhyhang/code/rocksdb -lrocksdb -lstdc++ -lm -lz -lbz2 -lsnappy -llz4 -lzstd"
+
+// run in cmd:
+//     export CGO_CFLAGS="-I/home/zhyhang/code/rocksdb/include"
+//     export CGO_LDFLAGS="-L/home/zhyhang/code/rocksdb -lrocksdb -lstdc++ -lm -lz -lbz2 -lsnappy -llz4 -lzstd"
+//     go run rocksdb-cli.go
+//
 func main() {
 
 	options := gorocksdb.NewDefaultOptions()
