@@ -53,12 +53,31 @@ func main() {
 		que <- 1
 	}
 	log.Println("end write rocksdb")
+	log.Println()
+	log.Println("begin read from rocksdb")
+	for i := 0; i < 10; i++ {
+		log.Printf("\t%d->%s\n", i, get(db, i))
+	}
+	log.Println("end read from rocksdb")
 	defer db.Close()
 }
 
 func put(db *gorocksdb.DB, que chan int, i int) {
 	db.Put(gorocksdb.NewDefaultWriteOptions(), strmd5("k"+strconv.Itoa(i)), []byte("v"+strconv.Itoa(i)))
 	<-que
+}
+
+func get(db *gorocksdb.DB, i int) string {
+	values, err := db.Get(gorocksdb.NewDefaultReadOptions(), strmd5("k"+strconv.Itoa(i)))
+	if err != nil {
+		values.Free()
+		log.Println(err)
+		return ""
+	} else {
+		// must call free to avoid memory leak
+		defer values.Free()
+		return string(values.Data())
+	}
 }
 
 func strmd5(s string) []byte {
