@@ -19,7 +19,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	// get pilosaServer instance
+	// get pilosa Server instance
 	pilosaServer := serverCmd.Server
 	// create api
 	apiOption := pilosa.OptAPIServer(pilosaServer)
@@ -35,7 +35,7 @@ func main() {
 			fmt.Println(field.Type())
 		}
 	}
-	// directly read index and filed from pilosaServer
+	// directly read index and filed from pilosa Server
 	holder := pilosaServer.Holder()
 	index := holder.Index("did")
 	fields := index.Fields()
@@ -43,7 +43,25 @@ func main() {
 		fmt.Println(field.Name())
 	}
 
+	// create index
+	newIndexName := "wrapper-index-1"
+
+	if newIndex(api, newIndexName) {
+		log.Printf("create index %s success\n", newIndexName)
+	}
+
 	// blocking for pilosaServer alive
 	serverCmd.Wait()
 
+}
+
+func newIndex(api *pilosa.API, name string) bool {
+	options := pilosa.IndexOptions{false, true}
+	_, err := api.CreateIndex(context.Background(), name, options)
+	success := true
+	if err != nil {
+		log.Printf("create index %s error, because: %v", name, err)
+		success = false
+	}
+	return success
 }
