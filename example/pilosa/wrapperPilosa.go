@@ -19,10 +19,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	// get server instance
-	server := serverCmd.Server
+	// get pilosaServer instance
+	pilosaServer := serverCmd.Server
 	// create api
-	apiOption := pilosa.OptAPIServer(server)
+	apiOption := pilosa.OptAPIServer(pilosaServer)
 	api, err := pilosa.NewAPI(apiOption)
 	// api usage
 	if err != nil {
@@ -35,15 +35,15 @@ func main() {
 			fmt.Println(field.Type())
 		}
 	}
-	// directly read index and filed from server
-	holder := server.Holder()
+	// directly read index and filed from pilosaServer
+	holder := pilosaServer.Holder()
 	index := holder.Index("did")
 	fields := index.Fields()
 	for _, field := range fields {
 		fmt.Println(field.Name())
 	}
 
-	// blocking for server alive
+	// blocking for pilosaServer alive
 	serverCmd.Wait()
 
 }
