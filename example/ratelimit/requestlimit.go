@@ -32,7 +32,10 @@ func task(total *int32, beginTime *time.Time, limiter *rate.Limiter) {
 	bTime := *beginTime
 	lastTotal := *total
 	for {
-		limiter.Wait(context.TODO())
+		err := limiter.Wait(context.TODO())
+		if err!= nil {
+			log.Println(err)
+		}
 		atomic.AddInt32(total, 1)
 		timeNow := time.Now()
 		subTime := timeNow.Sub(bTime)
