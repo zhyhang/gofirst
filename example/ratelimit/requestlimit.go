@@ -16,7 +16,15 @@ func main() {
 	for i := 0; i < 24; i++ {
 		go task(&total, &beginTime, limiter)
 	}
+	// wait 1 minute, then exit
+	go func() {
+		time.Sleep(time.Second * 60)
+		waitChannel <- 1
+	}()
+
 	<-waitChannel
+
+	log.Println("Done.")
 
 }
 
