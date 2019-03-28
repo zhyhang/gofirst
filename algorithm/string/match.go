@@ -1,7 +1,5 @@
 package string
 
-import ()
-
 // find the shortest sub-string of s, the sub-string contains the letters
 func SearchShortestSubString(s, letters string) string {
 	if s == "" || letters == "" {
@@ -42,4 +40,37 @@ func makeLetterMap(letters string) map[rune]bool {
 		lmap[l] = true
 	}
 	return lmap
+}
+
+func IndexOfAll(txt, sub string) (subIndexes []int) {
+	subIndexes = nil
+	if txt == "" && sub == "" {
+		subIndexes = []int{0}
+		return
+	} else if txt == "" || sub == "" {
+		return
+	}
+	txtSlice := []rune(txt)
+	subSlice := []rune(sub)
+	for i := 0; i < len(txtSlice); {
+		if len(txtSlice)-i < len(subSlice) {
+			break
+		}
+		for j := 0; j < len(subSlice); {
+			if txtSlice[i] == subSlice[j] {
+				if j == len(subSlice)-1 {
+					subIndexes = append(subIndexes, i-j)
+					i = i - j + 1 //lookup next matched
+					break
+				}
+				i++
+				j++
+
+			} else {
+				i = i - j + 1
+				break
+			}
+		}
+	}
+	return
 }

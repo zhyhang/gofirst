@@ -1,6 +1,7 @@
 package string
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -35,4 +36,25 @@ func TestSearchShortestSubString(t *testing.T) {
 		}
 	}
 
+}
+
+func TestIndexOfAll(t *testing.T) {
+	cases := []struct {
+		txt, sub string
+		indexes  []int
+	}{
+		{"", "", []int{0}},
+		{"a", "", nil},
+		{"abcdefga", "a", []int{0, 7}},
+		{"abcdefga", "c", []int{2}},
+		{"aaabcaadaa", "aa", []int{0, 1, 5, 8}},
+		{"abcdefga", "ac", nil},
+	}
+
+	for _, c := range cases {
+		result := IndexOfAll(c.txt, c.sub)
+		if !reflect.DeepEqual(result, c.indexes) {
+			t.Errorf("IndexOfAll(%v,%v), want %v, but %v", c.txt, c.sub, c.indexes, result)
+		}
+	}
 }
