@@ -57,4 +57,14 @@ func TestIndexOfAll(t *testing.T) {
 			t.Errorf("IndexOfAll(%v,%v), want %v, but %v", c.txt, c.sub, c.indexes, result)
 		}
 	}
+
+	// test for simple
+
+	for _, c := range cases {
+		result := IndexOfAllSimple(c.txt, c.sub)
+		if !reflect.DeepEqual(result, c.indexes) {
+			t.Errorf("IndexOfAllSimple(%v,%v), want %v, but %v", c.txt, c.sub, c.indexes, result)
+		}
+	}
+
 }

@@ -74,3 +74,30 @@ func IndexOfAll(txt, sub string) (subIndexes []int) {
 	}
 	return
 }
+
+func IndexOfAllSimple(txt, sub string) (subIndexes []int) {
+	if txt == "" && sub == "" {
+		return []int{0}
+	}
+	if txt == "" || sub == "" {
+		return nil
+	}
+	subIndexes = nil
+	txtUnicodes := []rune(txt)
+	subUnicodes := []rune(sub)
+	for i, j := 0, 0; i < len(txtUnicodes) && j < len(subUnicodes); {
+		if txtUnicodes[i] == subUnicodes[j] {
+			i++
+			j++
+		} else {
+			i = i - j + 1
+			j = 0
+		}
+		if j == len(subUnicodes) {
+			subIndexes = append(subIndexes, i-j)
+			i = i - j + 1
+			j = 0
+		}
+	}
+	return
+}
