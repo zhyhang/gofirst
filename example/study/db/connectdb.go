@@ -8,7 +8,6 @@ import (
 )
 
 func main() {
-	//db, err := sql.Open("mysql", "optimus:ipinyou.com@tcp(192.168.144.55:3306)/test?charset=utf8mb4,utf8&autocommit=true")
 	db, err := sql.Open("mysql", "root:@tcp(:3306)/test?charset=utf8mb4,utf8&autocommit=true")
 	if err != nil {
 		log.Fatal(err)
