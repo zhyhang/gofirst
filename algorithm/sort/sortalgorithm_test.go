@@ -64,3 +64,24 @@ func TestMergesort(t *testing.T) {
 		}
 	}
 }
+
+func TestQuickSortIter(t *testing.T) {
+	cases := []struct {
+		in, want []int
+	}{
+		{[]int{3, 5, -1, 0, 6, 4}, []int{-1, 0, 3, 4, 5, 6}},
+		{[]int{-3, -2, -1, 0, 1, 2}, []int{-3, -2, -1, 0, 1, 2}},
+		{[]int{3, 2, 1, 4, -1, 200, 199, 1, 2, 3, 5}, []int{-1, 1, 1, 2, 2, 3, 3, 4, 5, 199, 200}},
+		{make([]int, 0, 0), make([]int, 0, 0)},
+	}
+	for _, c := range cases {
+		fmt.Println(c.in)
+		QuickSortIter(c.in)
+		fmt.Println(c.in)
+		for i, e := range c.in {
+			if e != c.want[i] {
+				t.Errorf("QuickSortIter(%v), want %v", c.in, c.want)
+			}
+		}
+	}
+}
