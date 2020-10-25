@@ -20,3 +20,4 @@
 
 # JetBrains intelliJ Idea and Gogland
 .idea/
+/access.log

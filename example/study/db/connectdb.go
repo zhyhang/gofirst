@@ -2,9 +2,9 @@ package main
 
 import (
 	"database/sql"
-	"log"
-	_ "github.com/go-sql-driver/mysql"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	"log"
 )
 
 func main() {
